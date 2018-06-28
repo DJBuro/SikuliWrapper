@@ -52,24 +52,7 @@
 				return sikuliHome;
 			}
 
-			throw new FileNotFoundException($"sikulix.jar not found in the solution. If you install sikuli on other place please add SIKULI_HOME environment variable.");
-		}
-
-		private static string DetectSikuliPath(string sikuliHome)
-		{
-			string sikuliScript101JarPath = Path.Combine(sikuliHome, "sikuli-script.jar");
-			if (File.Exists(sikuliScript101JarPath))
-			{
-				return sikuliScript101JarPath;
-			}
-
-			string sikuliScript110JarPath = Path.Combine(sikuliHome, "sikulix.jar");
-			if (File.Exists(sikuliScript110JarPath))
-			{
-				return sikuliScript110JarPath;
-			}
-
-			throw new FileNotFoundException($"Neither sikuli-script.jar nor sikulix.jar were found in the path referenced in SIKULI_HOME environment variable \"{sikuliHome}\"");
+			throw new FileNotFoundException("sikulix.jar not found in the solution. If you install sikuli on other place please add SIKULI_HOME environment variable.");
 		}
 
 		private static string GuessJavaPath()

@@ -20,18 +20,8 @@
 
 		public SikuliRuntime(IAsyncStreamsHandlerFactory asyncDuplexStreamsHandlerFactory, ISikuliScriptProcessFactory sikuliScriptProcessFactory)
 		{
-			if (asyncDuplexStreamsHandlerFactory == null)
-			{
-				throw new ArgumentNullException(nameof(asyncDuplexStreamsHandlerFactory));
-			}
-
-			if (sikuliScriptProcessFactory == null)
-			{
-				throw new ArgumentNullException(nameof(sikuliScriptProcessFactory));
-			}
-
-			_asyncDuplexStreamsHandlerFactory = asyncDuplexStreamsHandlerFactory;
-			_sikuliScriptProcessFactory = sikuliScriptProcessFactory;
+			_asyncDuplexStreamsHandlerFactory = asyncDuplexStreamsHandlerFactory ?? throw new ArgumentNullException(nameof(asyncDuplexStreamsHandlerFactory));
+			_sikuliScriptProcessFactory = sikuliScriptProcessFactory ?? throw new ArgumentNullException(nameof(sikuliScriptProcessFactory));
 		}
 
 		public void Start()

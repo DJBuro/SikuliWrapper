@@ -10,21 +10,16 @@
 		private readonly string _path;
 		private readonly double _similarity;
 
-		public string Path => this._path;
+		public string Path => _path;
 
 		public FilePattern(string path, double similarity)
 		{
-			if (path == null)
-			{
-				throw new ArgumentNullException(nameof(path));
-			}
-
 			if (similarity < 0 || similarity > 1)
 			{
 				throw new ArgumentOutOfRangeException(nameof(similarity), similarity, "similarity must be between 0 and 1");
 			}
 
-			_path = path;
+			_path = path ?? throw new ArgumentNullException(nameof(path));
 			_similarity = similarity;
 		}
 

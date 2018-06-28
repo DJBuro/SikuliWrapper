@@ -54,10 +54,10 @@
 
 		public bool Type(IImage image, string text)
 		{
-			this.Click(image);
+			Click(image);
 			if (InvalidTextRegex.IsMatch(text))
 			{
-				throw new ArgumentException("Text cannot contain control characters. Escape them before, e.g. \\n should be \\\\n", "text");
+				throw new ArgumentException("Text cannot contain control characters. Escape them before, e.g. \\n should be \\\\n", nameof(text));
 			}
 
 			string script = $"print \"SIKULI#: YES\" if type(\"{text}\") == 1 else \"SIKULI#: NO\"";

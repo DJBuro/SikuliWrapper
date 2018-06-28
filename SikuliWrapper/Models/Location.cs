@@ -1,11 +1,10 @@
 ﻿namespace SikuliWrapper.Models
 {
 	using System;
-	using SikuliWrapper.Interfaces;
 
 	public class Location
 	{
-		private Point _point;
+		private readonly Point _point;
 
 		public Location(int x, int y)
 			: this(new Point(x, y))

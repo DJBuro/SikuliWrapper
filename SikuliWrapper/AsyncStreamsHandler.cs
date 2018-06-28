@@ -24,8 +24,8 @@
 			_stderr = stderr;
 			_stdin = stdin;
 
-			_readStdoutTask = Task.Factory.StartNew(() => ReadStdout(), TaskCreationOptions.LongRunning);
-			_readStderrTask = Task.Factory.StartNew(() => ReadStderr(), TaskCreationOptions.LongRunning);
+			_readStdoutTask = Task.Factory.StartNew(ReadStdout, TaskCreationOptions.LongRunning);
+			_readStderrTask = Task.Factory.StartNew(ReadStderr, TaskCreationOptions.LongRunning);
 		}
 
 		public string ReadUntil(double timeoutInSeconds, params string[] expectedStrings)
@@ -57,8 +57,7 @@
 		{
 			while (true)
 			{
-				string line;
-				if (_pendingOutputLines.TryTake(out line, TimeSpan.FromSeconds(timeoutInSeconds)))
+				if (_pendingOutputLines.TryTake(out var line, TimeSpan.FromSeconds(timeoutInSeconds)))
 				{
 					yield return line;
 				}
@@ -83,15 +82,9 @@
 
 		public void Dispose()
 		{
-			if (_readStdoutTask != null)
-			{
-				_readStdoutTask.Dispose();
-			}
+			_readStdoutTask?.Dispose();
 
-			if (_readStderrTask != null)
-			{
-				_readStderrTask.Dispose();
-			}
+			_readStderrTask?.Dispose();
 		}
 
 		private void ReadStdout()
