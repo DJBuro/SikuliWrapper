@@ -1,10 +1,11 @@
 ﻿namespace SikuliWrapper.Models
 {
 	using System;
+	using SikuliWrapper.Interfaces;
 
 	public class Location
 	{
-		private readonly Point _point;
+		private Point _point;
 
 		public Location(int x, int y)
 			: this(new Point(x, y))
@@ -20,7 +21,7 @@
 		{
 			if(_point.X < 0 || _point.Y < 0)
 			{
-				throw new Exception("Cannot target a negative position");
+				throw new ArgumentException("Cannot target a negative position");
 			}
 		}
 

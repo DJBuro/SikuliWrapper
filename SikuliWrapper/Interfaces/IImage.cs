@@ -2,8 +2,8 @@
 {
 	public interface IImage
 	{
-		string Path { get; }
-		void Validate();
-		string ToSikuliScript();
+		string Path { get; set; }
+		string GeneratePatternString();
+		string ToSikuliScript(string command, double commandParameter);
 	}
 }

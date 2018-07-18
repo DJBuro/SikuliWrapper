@@ -17,18 +17,18 @@
 		private readonly Task _readStderrTask;
 		private readonly Task _readStdoutTask;
 		private readonly BlockingCollection<string> _pendingOutputLines = new BlockingCollection<string>();
-
+		
 		public AsyncStreamsHandler(TextReader stdout, TextReader stderr, TextWriter stdin)
 		{
 			_stdout = stdout;
 			_stderr = stderr;
 			_stdin = stdin;
 
-			_readStdoutTask = Task.Factory.StartNew(ReadStdout, TaskCreationOptions.LongRunning);
-			_readStderrTask = Task.Factory.StartNew(ReadStderr, TaskCreationOptions.LongRunning);
+			_readStdoutTask = Task.Factory.StartNew(() => ReadStdout(), TaskCreationOptions.LongRunning);
+			_readStderrTask = Task.Factory.StartNew(() => ReadStderr(), TaskCreationOptions.LongRunning);
 		}
 
-		public string ReadUntil(double timeoutInSeconds, params string[] expectedStrings)
+		public virtual string ReadUntil(double timeoutInSeconds, params string[] expectedStrings)
 		{
 			while (true)
 			{
@@ -57,7 +57,7 @@
 		{
 			while (true)
 			{
-				if (_pendingOutputLines.TryTake(out var line, TimeSpan.FromSeconds(timeoutInSeconds)))
+				if (_pendingOutputLines.TryTake(out string line, TimeSpan.FromSeconds(timeoutInSeconds)))
 				{
 					yield return line;
 				}
@@ -83,7 +83,6 @@
 		public void Dispose()
 		{
 			_readStdoutTask?.Dispose();
-
 			_readStderrTask?.Dispose();
 		}
 
@@ -107,7 +106,6 @@
 					line = prefix + line;
 				}
 
-				File.AppendAllText(@"..\..\..\log.txt", line + Environment.NewLine);
 				_pendingOutputLines.Add(line);
 			}
 		}

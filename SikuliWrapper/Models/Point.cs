@@ -4,12 +4,12 @@
     {
         public Point(int x, int y)
         {
-            X = x;
-            Y = y;
+            this.X = x;
+            this.Y = y;
         }
 
-	    public int X { get; }
+	    public int X { get; private set; }
 
-	    public int Y { get; }
+	    public int Y { get; private set; }
     }
 }

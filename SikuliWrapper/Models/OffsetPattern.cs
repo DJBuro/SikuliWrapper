@@ -3,32 +3,27 @@
 	using System;
 	using SikuliWrapper.Interfaces;
 
-	public class OffsetPattern : IImage
+	public class OffsetPattern : Pattern, IImage
 	{
 		private readonly IImage _pattern;
 		private readonly Point _offset;
-
-		public string Path => _pattern.Path;
-
+		
 		public OffsetPattern(IImage pattern, Point offset)
+			: base (pattern.Path)
 		{
-			_pattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
+			_pattern = pattern;
 			_offset = offset;
 		}
 
-		public void Validate()
+		public string ToSikuliScript(string command, double commandParameter)
 		{
-			if(_pattern is OffsetPattern)
-			{
-				throw new Exception("Cannot use WithOffsetPattern with itself");
-			}
-
-			_pattern.Validate();
+			return
+				$"print \"SIKULI#: YES\" if {command}({GeneratePatternString()}{ToSukuliFloat(commandParameter)}) else \"SIKULI#: NO\"";
 		}
 
-		public string ToSikuliScript()
+		public string GeneratePatternString()
 		{
-			return $"{_pattern.ToSikuliScript()}.targetOffset({_offset.X}, {_offset.Y})";
+			return $"{_pattern.GeneratePatternString()}.targetOffset({_offset.X}, {_offset.Y})";
 		}
 	}
 }

@@ -1,15 +1,24 @@
 ﻿namespace SikuliWrapper
 {
 	using System;
+	using System.IO;
 	using System.Text.RegularExpressions;
-	using SikuliWrapper.Exceptions;
 	using SikuliWrapper.Interfaces;
 	using SikuliWrapper.Models;
+	using SikuliWrapper.Utilities;
 
 	public class Screen : IScreen
 	{
 		private static readonly Regex InvalidTextRegex = new Regex(@"[\r\n\t\x00-\x1F]", RegexOptions.Compiled);
 		private readonly ISikuliRuntime _runtime;
+
+		public Screen()
+		{
+			var manager = new SikuliScriptProcessManager();
+
+			_runtime = new SikuliRuntime(manager);
+			_runtime.Start();
+		}
 
 		public Screen(ISikuliRuntime sikuliRuntime)
 		{
@@ -17,109 +26,77 @@
 			_runtime.Start();
 		}
 
-		public bool Exists(IImage pattern, double timeoutInSeconds = 0)
+		public void Exists(IImage image, double timeoutInSeconds = 1)
 		{
-			return RunCommand("exists", pattern, timeoutInSeconds);
+			_runtime.Run(image.ToSikuliScript("exists", timeoutInSeconds), timeoutInSeconds);
 		}
 
-		public bool Click(IImage pattern)
+		public void Click(IImage image)
 		{
-			return RunCommand("click", pattern, 0);
+			_runtime.Run(image.ToSikuliScript("click", 0));
 		}
 
-		public bool Click(IImage pattern, Point offset)
+		public void Click(IImage image, Point offset)
 		{
-			return RunCommand("click", new OffsetPattern(pattern, offset), 0);
+			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("click", 0));
 		}
 
-		public bool DoubleClick(IImage pattern)
+		public void DoubleClick(IImage image)
 		{
-			return RunCommand("doubleClick", pattern, 0);
+			_runtime.Run(image.ToSikuliScript("doubleClick", 0));
 		}
 
-		public bool DoubleClick(IImage pattern, Point offset)
+		public void DoubleClick(IImage image, Point offset)
 		{
-			return RunCommand("doubleClick", new OffsetPattern(pattern, offset), 0);
+			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("doubleClick", 0));
 		}
 
-		public bool Wait(IImage pattern, double timeoutInSeconds = 2)
+		public void Wait(IImage image, double timeoutInSeconds = 2)
 		{
-			return RunCommand("wait", pattern, timeoutInSeconds);
+			_runtime.Run(image.ToSikuliScript("wait", timeoutInSeconds), timeoutInSeconds);
 		}
 
-		public bool WaitVanish(IImage pattern, double timeoutInSeconds = 0)
+		public void WaitVanish(IImage image, double timeoutInSeconds = 1)
 		{
-			return RunCommand("waitVanish", pattern, timeoutInSeconds);
+			_runtime.Run(image.ToSikuliScript("waitVanish", timeoutInSeconds));
 		}
 
-		public bool Type(IImage image, string text)
+		public void Type(IImage image, string text)
 		{
 			Click(image);
 			if (InvalidTextRegex.IsMatch(text))
 			{
-				throw new ArgumentException("Text cannot contain control characters. Escape them before, e.g. \\n should be \\\\n", nameof(text));
+				throw new ArgumentException("Text cannot contain control characters");
 			}
 
 			string script = $"print \"SIKULI#: YES\" if type(\"{text}\") == 1 else \"SIKULI#: NO\"";
-			string result = _runtime.Run(script, "SIKULI#: ", 0d);
-			return result.Contains("SIKULI#: YES");
+			_runtime.Run(script);
 		}
 
-		public bool Hover(IImage pattern)
+		public void Hover(IImage image)
 		{
-			return RunCommand("hover", pattern, 0);
+			_runtime.Run(image.ToSikuliScript("hover", 0));
 		}
 
-		public bool Hover(IImage pattern, Point offset)
+		public void Hover(IImage image, Point offset)
 		{
-			return RunCommand("hover", new OffsetPattern(pattern, offset), 0);
+			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("hover", 0));
 		}
 
-		public bool RightClick(IImage pattern)
+		public void RightClick(IImage image)
 		{
-			return RunCommand("rightClick", pattern, 0);
+			_runtime.Run(image.ToSikuliScript("rightClick", 0));
 		}
 
-		public bool RightClick(IImage pattern, Point offset)
+		public void RightClick(IImage image, Point offset)
 		{
-			return RunCommand("rightClick", new OffsetPattern(pattern, offset), 0);
+			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("rightClick", 0));
 		}
 
-		public bool DragDrop(IImage fromPattern, IImage toPattern)
+		public void DragDrop(IImage fromImage, IImage toImage)
 		{
-			return RunCommand("dragDrop", fromPattern, toPattern, 0);
-		}
-
-		private bool RunCommand(string command, IImage pattern, double commandParameter)
-		{
-			try
-			{
-				pattern.Validate();
-
-				string script = $"print \"SIKULI#: YES\" if {command}({pattern.ToSikuliScript()}{ToSukuliFloat(commandParameter)}) else \"SIKULI#: NO\"";
-
-				string result = _runtime.Run(script, "SIKULI#: ", commandParameter); // Failsafe
-				return result.Contains("SIKULI#: YES");
-			}
-			catch (Exception ex)
-			{
-				throw new PatternException($"Element can not be found on screen {pattern.Path} ", ex);
-			}
-		}
-
-		private bool RunCommand(string command, IImage fromPattern, IImage toPattern, float commandParameter)
-		{
-			fromPattern.Validate();
-			toPattern.Validate();
-
-			string script = $"print \"SIKULI#: YES\" if {command}({fromPattern.ToSikuliScript()},{toPattern.ToSikuliScript()}{ToSukuliFloat(commandParameter)}) else \"SIKULI#: NO\"";
-			string result = _runtime.Run(script, "SIKULI#: ", commandParameter * 1.5d); // Failsafe
-			return result.Contains("SIKULI#: YES");
-		}
-		
-		private static string ToSukuliFloat(double timeoutInSeconds)
-		{
-			return timeoutInSeconds > 0f ? ", " + timeoutInSeconds.ToString("0.####") : "";
+			string script = $"print \"SIKULI#: YES\" if dragDrop({fromImage.GeneratePatternString()},{toImage.GeneratePatternString()}0.0000 else \"SIKULI#: NO\"";
+			_runtime.Run(script); // Failsafe
 		}
 
 		public void Dispose()
