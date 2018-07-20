@@ -4,6 +4,7 @@
 	using FluentAssertions;
 	using NUnit.Framework;
 	using SikuliWrapper.Models;
+	using SikuliWrapper.Utilities;
 
 	[TestFixture]
     public class ImageTests
@@ -14,7 +15,7 @@
 		    var pathToTestPic = Path.GetFullPath(@"..\..\..\Utils\vs.png");
 		    var actualResult = ImageFactory.FromFile(pathToTestPic);
 
-			var expectedResult = new FilePattern(pathToTestPic, 0.7);
+			var expectedResult = new FileImage(pathToTestPic, 0.7);
 			actualResult.Should().BeEquivalentTo(expectedResult);
 	    }
 

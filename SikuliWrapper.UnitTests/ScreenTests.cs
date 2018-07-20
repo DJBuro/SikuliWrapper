@@ -62,7 +62,7 @@
 		public void ClickWithOffset_InvokePattern_WithRightCommand()
 		{
 			Point offset = new Point(5, 5);
-			var offsetImage = new OffsetPattern(image, offset);
+			var offsetImage = new OffsetImage(image, offset);
 			var sikuliCommand = offsetImage.ToSikuliScript("click", 0);
 			mockRuntime.Setup(r => r.Run(sikuliCommand, 0)).Callback(() => invokeCount++);
 
@@ -88,7 +88,7 @@
 		public void DoubleClickWithOffset_InvokePattern_WithRightCommand()
 		{
 			Point offset = new Point(5, 5);
-			var offsetImage = new OffsetPattern(image, offset);
+			var offsetImage = new OffsetImage(image, offset);
 			var sikuliCommand = offsetImage.ToSikuliScript("doubleClick", 0);
 			mockRuntime.Setup(r => r.Run(sikuliCommand, 0)).Callback(() => invokeCount++);
 
@@ -149,7 +149,7 @@
 		public void HoverWithOffset_InvokePattern_WithRightCommand()
 		{
 			Point offset = new Point(5, 5);
-			var offsetImage = new OffsetPattern(image, offset);
+			var offsetImage = new OffsetImage(image, offset);
 			var sikuliCommand = offsetImage.ToSikuliScript("hover", 0);
 			mockRuntime.Setup(r => r.Run(sikuliCommand, 0)).Callback(() => invokeCount++);
 
@@ -175,7 +175,7 @@
 		public void RightClickWithOffset_InvokePattern_WithRightCommand()
 		{
 			Point offset = new Point(5, 5);
-			var offsetImage = new OffsetPattern(image, offset);
+			var offsetImage = new OffsetImage(image, offset);
 			var sikuliCommand = offsetImage.ToSikuliScript("rightClick", 0);
 			mockRuntime.Setup(r => r.Run(sikuliCommand, 0)).Callback(() => invokeCount++);
 

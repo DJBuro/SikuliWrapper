@@ -33,7 +33,7 @@
 		}
 
 		[Test]
-		public async Task ReadUntil_StringIsFound()
+		public void ReadUntil_StringIsFound()
 		{
 			var stdout = new StringReader(String.Join(Environment.NewLine,
 				"This line should be ignored because it comes before",
@@ -48,7 +48,7 @@
 		}
 
 		[Test]
-		public async Task ReadUntil_StringIsFoundInError()
+		public void ReadUntil_StringIsFoundInError()
 		{
 			var stdout = new StringReader("This line should be ignored" + Environment.NewLine);
 			var stderr = new StringReader("This line should be taken because it includes MARKER in it" + Environment.NewLine);
@@ -61,7 +61,7 @@
 		}
 
 		[Test]
-		public async Task ReadUntilTimeoutThrows()
+		public void ReadUntilTimeoutThrows()
 		{
 			var stream = new BlockingStream();
 			var stdout = new StreamReader(stream);

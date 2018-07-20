@@ -14,7 +14,7 @@
 		[TestCase("")]
 		public void Create_FilePattern_WithNullOrEmptyString_ThrowException(string path)
 		{
-			Action action = () => new FilePattern(path, 0.5);
+			Action action = () => new FileImage(path, 0.5);
 
 			action.Should()
 				.Throw<ArgumentNullException>()
@@ -29,7 +29,7 @@
 		public void CreateFilePattern_WithInvalidSimilarity_ThrowException(double similarity)
 		{
 			var pathToTestPic = Path.GetFullPath(@"..\..\..\Utils\vs.png");
-			Action action = () => new FilePattern(pathToTestPic, similarity);
+			Action action = () => new FileImage(pathToTestPic, similarity);
 
 			action.Should()
 				.Throw<ArgumentOutOfRangeException>()
@@ -40,7 +40,7 @@
 		public void ValidatePathExist_WithValidPath_ShouldPass()
 		{
 			var pathToRealFile = Directory.GetCurrentDirectory() + "\\SikuliWrapper.dll";
-			Action action = () => new FilePattern(pathToRealFile, 0.7);
+			Action action = () => new FileImage(pathToRealFile, 0.7);
 
 			action.Should().NotThrow();
 		}
@@ -49,7 +49,7 @@
 		public void ValidatePathExist_WithInvalidValidPath_ShouldThrowException()
 		{
 			var pathToRealFile = Directory.GetCurrentDirectory() + "\\Batman.dll";
-			Action action = () => new FilePattern(pathToRealFile, 0.7);
+			Action action = () => new FileImage(pathToRealFile, 0.7);
 
 			action.Should()
 				.Throw<FileNotFoundException>()
@@ -63,7 +63,7 @@
 		public void ConvertToSikuliScript_ReturnRightSikuliScript(double number, string text)
 		{
 			var pathToTestPic = Path.GetFullPath(@"..\..\..\Utils\vs.png");
-			var actualResult =  new FilePattern(Path.GetFullPath(pathToTestPic), number).GeneratePatternString();
+			var actualResult =  new FileImage(Path.GetFullPath(pathToTestPic), number).GeneratePatternString();
 
 			actualResult.Should().Be($@"Pattern(""{pathToTestPic}"").similar({text})");
 		}
@@ -72,7 +72,7 @@
 		public void ToSikuliScript_WithValidPositiveSimilarity_ShouldReturnRightString()
 		{
 			var pathToRealFile = Directory.GetCurrentDirectory() + "\\SikuliWrapper.dll";
-			FilePattern pattern = new FilePattern(pathToRealFile, 0.7);
+			FileImage pattern = new FileImage(pathToRealFile, 0.7);
 
 			var actualResult = pattern.ToSikuliScript("click", 0.7);
 

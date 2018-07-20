@@ -38,7 +38,7 @@
 
 		public void Click(IImage image, Point offset)
 		{
-			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("click", 0));
+			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("click", 0));
 		}
 
 		public void DoubleClick(IImage image)
@@ -48,7 +48,7 @@
 
 		public void DoubleClick(IImage image, Point offset)
 		{
-			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("doubleClick", 0));
+			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("doubleClick", 0));
 		}
 
 		public void Wait(IImage image, double timeoutInSeconds = 2)
@@ -80,7 +80,7 @@
 
 		public void Hover(IImage image, Point offset)
 		{
-			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("hover", 0));
+			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("hover", 0));
 		}
 
 		public void RightClick(IImage image)
@@ -90,7 +90,7 @@
 
 		public void RightClick(IImage image, Point offset)
 		{
-			_runtime.Run(new OffsetPattern(image, offset).ToSikuliScript("rightClick", 0));
+			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("rightClick", 0));
 		}
 
 		public void DragDrop(IImage fromImage, IImage toImage)
