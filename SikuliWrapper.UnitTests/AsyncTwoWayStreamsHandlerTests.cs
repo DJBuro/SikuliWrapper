@@ -35,7 +35,7 @@
 		[Test]
 		public void ReadUntil_StringIsFound()
 		{
-			var stdout = new StringReader(String.Join(Environment.NewLine,
+			var stdout = new StringReader(string.Join(Environment.NewLine,
 				"This line should be ignored because it comes before",
 				"This line should be taken because it includes MARKER in it",
 				"This line should be ignored because it comes after") + Environment.NewLine);
@@ -55,7 +55,7 @@
 			var stdin = new StringWriter();
 			var handler = new AsyncStreamsHandler(stdout, stderr, stdin);
 
-			string actualResult = handler.ReadUntil(0, "MARKER");
+			var actualResult = handler.ReadUntil(0, "MARKER");
 
 			actualResult.Should().Be("[error] This line should be taken because it includes MARKER in it");
 		}

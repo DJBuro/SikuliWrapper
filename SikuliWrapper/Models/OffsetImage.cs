@@ -1,6 +1,5 @@
 ﻿namespace SikuliWrapper.Models
 {
-	using System;
 	using SikuliWrapper.Interfaces;
 
 	public class OffsetImage : Image, IImage

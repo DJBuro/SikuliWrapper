@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Diagnostics;
-	using System.IO;
 	using System.Linq;
 	using System.Reflection;
 	using FluentAssertions;
@@ -14,12 +13,12 @@
 	[TestFixture]
 	public class SikuliRuntimeTests
 	{
-		private ISikuliScriptProcessManager manager;
+		private ISikuliScriptProcessManager _manager;
 
 		[SetUp]
 		public void SetUp()
 		{
-			manager = new SikuliScriptProcessManager();
+			_manager = new SikuliScriptProcessManager();
 		}
 
 		[Test]
@@ -34,7 +33,7 @@
 		[Test]
 		public void Start_WithNotNullProcess_ShoulThrowException()
 		{
-			ISikuliRuntime runtime = new SikuliRuntime(manager);
+			ISikuliRuntime runtime = new SikuliRuntime(_manager);
 			var process = runtime
 				.GetType()
 				.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
@@ -49,7 +48,7 @@
 		[Test]
 		public void Stop_WithNullProcess_ShouldReturn()
 		{
-			var runtime = new SikuliRuntime(manager);
+			var runtime = new SikuliRuntime(_manager);
 			runtime.Invoking(m => m.Stop()).Should().NotThrow();
 		}
 	}

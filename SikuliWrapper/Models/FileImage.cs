@@ -8,8 +8,7 @@
 	{
 		private readonly double _similarity;
 
-		public FileImage(string path, double similarity) 
-			: base (path)
+		public FileImage(string path, double similarity) : base (path)
 		{
 			if (similarity <= 0 || similarity >= 1)
 			{

@@ -37,7 +37,7 @@
 			var point = new Point(5, 5);
 			var offsetPattern =  new OffsetImage(pattern, point);
 
-			string actualResult = offsetPattern.ToSikuliScript("click", 0);
+			var actualResult = offsetPattern.ToSikuliScript("click", 0);
 
 			actualResult.Should()
 				.Be(

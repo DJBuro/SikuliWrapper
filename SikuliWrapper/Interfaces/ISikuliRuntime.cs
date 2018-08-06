@@ -8,6 +8,6 @@
 
 		void Stop(bool ignoreErrors = false);
 
-		void Run(string command, double timeoutInSeconds = 0);
+		void Run(string command, double timeoutInSeconds = 1);
 	}
 }

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using System.Text.RegularExpressions;
 	using SikuliWrapper.Exceptions;
 	using SikuliWrapper.Interfaces;
 	using SikuliWrapper.Utilities;
@@ -10,7 +11,7 @@
 	{
 		private Process _process;
 		private IAsyncStreamsHandler _asyncStreamsHandler;
-		private ISikuliScriptProcessManager _sikuliScriptProcessManager;
+		private readonly ISikuliScriptProcessManager _sikuliScriptProcessManager;
 
 		public SikuliRuntime(ISikuliScriptProcessManager sikuliScriptProcessManager)
 		{
@@ -31,39 +32,41 @@
 
 		public void Stop(bool ignoreErrors = false)
 		{
-			if (_process != null)
+			if (_process == null)
 			{
-				_asyncStreamsHandler.WriteLine(Constants.ExitCommand);
+				return;
+			}
 
-				if (!_process.HasExited)
+			_asyncStreamsHandler.WriteLine(Constants.ExitCommand);
+
+			if (!_process.HasExited)
+			{
+				if (!_process.WaitForExit(500))
 				{
-					if (!_process.WaitForExit(500))
-					{
-						_process.Kill();
-					}
-				}
-
-				string errors = null;
-				if (!ignoreErrors)
-				{
-					errors = _process.StandardError.ReadToEnd();
-				}
-
-				_asyncStreamsHandler.WaitForExit();
-
-				_asyncStreamsHandler.Dispose();
-				_asyncStreamsHandler = null;
-				_process.Dispose();
-				_process = null;
-
-				if (!ignoreErrors && !String.IsNullOrEmpty(errors))
-				{
-					throw new SikuliException("Sikuli Errors: " + errors);
+					_process.Kill();
 				}
 			}
+
+			string errors = null;
+			if (!ignoreErrors)
+			{
+				errors = _process.StandardError.ReadToEnd();
+			}
+
+			_asyncStreamsHandler.WaitForExit();
+
+			_asyncStreamsHandler.Dispose();
+			_asyncStreamsHandler = null;
+			_process.Dispose();
+			_process = null;
+
+			if (!ignoreErrors && !string.IsNullOrEmpty(errors))
+			{
+				throw new SikuliException("Sikuli Errors: " + errors);
+			}
 		}
-		
-		public void Run(string command, double timeoutInSeconds = 0)
+
+		public void Run(string command, double timeoutInSeconds = 1)
 		{
 			if (_process == null || _process.HasExited)
 			{
@@ -74,18 +77,23 @@
 			_asyncStreamsHandler.WriteLine("");
 			_asyncStreamsHandler.WriteLine("");
 
-			string result = _asyncStreamsHandler
+			var result = _asyncStreamsHandler
 				.ReadUntil(timeoutInSeconds, Constants.ErrorMarker, Constants.ResultPrefix);
 
-			if (result.IndexOf(Constants.ErrorMarker, StringComparison.Ordinal) > -1)
+			if (result.IndexOf(Constants.ErrorMarker, StringComparison.Ordinal) <= -1)
 			{
-				result = result + Environment.NewLine + string.Join(Environment.NewLine, _asyncStreamsHandler.ReadUpToNow(0.1d));
-				if (result.Contains("FindFailed"))
-				{
-					throw new SikuliFindFailedException(result);
-				}
+				return;
+			}
+
+			result = result + Environment.NewLine + string.Join(Environment.NewLine, _asyncStreamsHandler.ReadUpToNow(0.1d));
+
+			if (!result.Contains("FindFailed"))
+			{
 				throw new SikuliException(result);
 			}
+
+			var regex = new Regex("FindFailed: .+");
+			throw new SikuliFindFailedException(regex.Match(result).Value);
 		}
 
 		public void Dispose()

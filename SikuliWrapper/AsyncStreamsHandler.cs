@@ -23,7 +23,7 @@
 			_stdout = stdout;
 			_stderr = stderr;
 			_stdin = stdin;
-
+			
 			_readStdoutTask = Task.Factory.StartNew(() => ReadStdout(), TaskCreationOptions.LongRunning);
 			_readStderrTask = Task.Factory.StartNew(() => ReadStderr(), TaskCreationOptions.LongRunning);
 		}
@@ -35,7 +35,7 @@
 				string line;
 				if (timeoutInSeconds > 0)
 				{
-					TimeSpan timeout = TimeSpan.FromSeconds(timeoutInSeconds);
+					var timeout = TimeSpan.FromSeconds(timeoutInSeconds);
 					if (!_pendingOutputLines.TryTake(out line, timeout))
 					{
 						throw new TimeoutException($@"No result in alloted time: {timeout}");
@@ -57,7 +57,7 @@
 		{
 			while (true)
 			{
-				if (_pendingOutputLines.TryTake(out string line, TimeSpan.FromSeconds(timeoutInSeconds)))
+				if (_pendingOutputLines.TryTake(out var line, TimeSpan.FromSeconds(timeoutInSeconds)))
 				{
 					yield return line;
 				}

@@ -72,7 +72,7 @@
 		public void ToSikuliScript_WithValidPositiveSimilarity_ShouldReturnRightString()
 		{
 			var pathToRealFile = Directory.GetCurrentDirectory() + "\\SikuliWrapper.dll";
-			FileImage pattern = new FileImage(pathToRealFile, 0.7);
+			var pattern = new FileImage(pathToRealFile, 0.7);
 
 			var actualResult = pattern.ToSikuliScript("click", 0.7);
 

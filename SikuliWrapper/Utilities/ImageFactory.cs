@@ -3,9 +3,9 @@
 	using SikuliWrapper.Interfaces;
 	using SikuliWrapper.Models;
 
-	public class ImageFactory
+	public static class ImageFactory
 	{
-		public const double DefaultSimilarity = 0.7;
+		private const double DefaultSimilarity = 0.7;
 
 		public static IImage FromFile(string path, double similarity = DefaultSimilarity)
 		{

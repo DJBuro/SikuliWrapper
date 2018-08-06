@@ -5,7 +5,7 @@
 
     public interface IScreen : IDisposable
     {
-        void Exists(IImage pattern, double timeoutInSeconds = 1);
+        bool Exists(IImage pattern, double timeoutInSeconds = 1);
         void Click(IImage pattern);
         void Click(IImage pattern, Point offset);
         void DoubleClick(IImage pattern);

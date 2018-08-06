@@ -1,7 +1,6 @@
 ﻿namespace SikuliWrapper
 {
 	using System;
-	using System.IO;
 	using System.Text.RegularExpressions;
 	using SikuliWrapper.Interfaces;
 	using SikuliWrapper.Models;
@@ -26,28 +25,33 @@
 			_runtime.Start();
 		}
 
-		public void Exists(IImage image, double timeoutInSeconds = 1)
+		public bool Exists(IImage image, double timeoutInSeconds = 1)
 		{
 			_runtime.Run(image.ToSikuliScript("exists", timeoutInSeconds), timeoutInSeconds);
+			return true;
 		}
 
 		public void Click(IImage image)
 		{
+			Wait(image);
 			_runtime.Run(image.ToSikuliScript("click", 0));
 		}
 
 		public void Click(IImage image, Point offset)
 		{
+			Wait(image);
 			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("click", 0));
 		}
 
 		public void DoubleClick(IImage image)
 		{
+			Wait(image);
 			_runtime.Run(image.ToSikuliScript("doubleClick", 0));
 		}
 
 		public void DoubleClick(IImage image, Point offset)
 		{
+			Wait(image);
 			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("doubleClick", 0));
 		}
 
@@ -63,39 +67,44 @@
 
 		public void Type(IImage image, string text)
 		{
+			Wait(image);
 			Click(image);
 			if (InvalidTextRegex.IsMatch(text))
 			{
 				throw new ArgumentException("Text cannot contain control characters");
 			}
 
-			string script = $"print \"SIKULI#: YES\" if type(\"{text}\") == 1 else \"SIKULI#: NO\"";
+			var script = $"print \"SIKULI#: YES\" if type(\"{text}\") == 1 else \"SIKULI#: NO\"";
 			_runtime.Run(script);
 		}
 
 		public void Hover(IImage image)
 		{
+			Wait(image);
 			_runtime.Run(image.ToSikuliScript("hover", 0));
 		}
 
 		public void Hover(IImage image, Point offset)
 		{
+			Wait(image);
 			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("hover", 0));
 		}
 
 		public void RightClick(IImage image)
 		{
+			Wait(image);
 			_runtime.Run(image.ToSikuliScript("rightClick", 0));
 		}
 
 		public void RightClick(IImage image, Point offset)
 		{
+			Wait(image);
 			_runtime.Run(new OffsetImage(image, offset).ToSikuliScript("rightClick", 0));
 		}
 
 		public void DragDrop(IImage fromImage, IImage toImage)
 		{
-			string script = $"print \"SIKULI#: YES\" if dragDrop({fromImage.GeneratePatternString()},{toImage.GeneratePatternString()}0.0000 else \"SIKULI#: NO\"";
+			var script = $"print \"SIKULI#: YES\" if dragDrop({fromImage.GeneratePatternString()},{toImage.GeneratePatternString()}0.0000 else \"SIKULI#: NO\"";
 			_runtime.Run(script); // Failsafe
 		}
 

@@ -290,3 +290,4 @@ __pycache__/
 *.nuspec
 *.runsettings
 *.jar
+**\*.txt

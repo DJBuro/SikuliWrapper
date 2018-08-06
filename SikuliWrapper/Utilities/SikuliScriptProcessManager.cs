@@ -12,9 +12,9 @@
 	{
 		public virtual Process Start(string args)
 		{
-			string javaPath = GuessJavaPath();
-			string sikuliHome = GuessSikuliPath();
-			string javaArguments = $"-jar \"{sikuliHome}\" {args}";
+			var javaPath = GuessJavaPath();
+			var sikuliHome = GuessSikuliPath();
+			var javaArguments = $"-jar \"{sikuliHome}\" {args}";
 			
 			var process = new Process
 			{
@@ -38,8 +38,8 @@
 
 		private string GuessSikuliPath()
 		{
-			string solutionFolder = Path.GetFullPath(@"..\..\..\..\");
-			foreach (string file in Directory.GetFiles(solutionFolder, "*", SearchOption.AllDirectories))
+			var solutionFolder = Path.GetFullPath(@"..\..\..\..\");
+			foreach (var file in Directory.GetFiles(solutionFolder, "*", SearchOption.AllDirectories))
 			{
 				if (file.Contains("sikulix.jar"))
 				{
@@ -47,27 +47,27 @@
 				}
 			}
 
-			string sikuliHome = MakeEmptyNull(Environment.GetEnvironmentVariable("SIKULI_HOME"));
+			var sikuliHome = MakeEmptyNull(Environment.GetEnvironmentVariable("SIKULI_HOME"));
 			if (sikuliHome != null)
 			{
 				return sikuliHome;
 			}
 
-			throw new FileNotFoundException($"sikulix.jar not found in the solution. If you install sikuli on other place please add SIKULI_HOME environment variable.");
+			throw new FileNotFoundException("sikulix.jar not found in the solution. If you install sikuli on other place please add SIKULI_HOME environment variable.");
 		}
 
 		private string GuessJavaPath()
 		{
-			string javaHome = MakeEmptyNull(Environment.GetEnvironmentVariable("JAVA_HOME"))
+			var javaHome = MakeEmptyNull(Environment.GetEnvironmentVariable("JAVA_HOME"))
 						   ?? MakeEmptyNull(GetJavaPathFromRegistry(RegistryView.Registry64))
 						   ?? MakeEmptyNull(GetJavaPathFromRegistry(RegistryView.Registry32));
 
-			if (String.IsNullOrEmpty(javaHome))
+			if (string.IsNullOrEmpty(javaHome))
 			{
 				throw new Exception("Java path not found. Is it installed? If yes, set the JAVA_HOME environment vairable.");
 			}
 
-			string javaPath = Path.Combine(javaHome, "bin", "java.exe");
+			var javaPath = Path.Combine(javaHome, "bin", "java.exe");
 
 			if (!File.Exists(javaPath))
 			{
@@ -80,15 +80,15 @@
 		private string GetJavaPathFromRegistry(RegistryView view)
 		{
 			const string jreKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
-			using (RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view).OpenSubKey(jreKey))
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view).OpenSubKey(jreKey))
 			{
 				if (baseKey == null)
 				{
 					return null;
 				}
 
-				string currentVersion = baseKey.GetValue("CurrentVersion").ToString();
-				using (RegistryKey homeKey = baseKey.OpenSubKey(currentVersion))
+				var currentVersion = baseKey.GetValue("CurrentVersion").ToString();
+				using (var homeKey = baseKey.OpenSubKey(currentVersion))
 				{
 					if (homeKey != null)
 					{
