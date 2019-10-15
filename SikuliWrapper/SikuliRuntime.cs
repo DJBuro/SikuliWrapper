@@ -18,6 +18,40 @@
 			_sikuliScriptProcessManager = sikuliScriptProcessManager ?? throw new ArgumentNullException(nameof(sikuliScriptProcessManager));
 		}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		public void Start()
 		{
 			if (_process != null)
