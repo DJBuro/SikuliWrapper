@@ -15,6 +15,29 @@
 				throw new ArgumentOutOfRangeException(nameof(similarity));
 			}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			_similarity = similarity;
 		}
 		
