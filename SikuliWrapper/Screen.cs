@@ -18,6 +18,19 @@
 			_runtime = new SikuliRuntime(manager);
 			_runtime.Start();
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		public Screen(ISikuliRuntime sikuliRuntime)
 		{
